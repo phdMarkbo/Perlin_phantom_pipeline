@@ -1,0 +1,114 @@
+% %% Parameters
+% cubeSize = 30;        % number of points per dimension
+% R = 5;                % sphere radius
+% 
+% % Generate cube coordinates
+% [x, y, z] = meshgrid(linspace(0,1,cubeSize), linspace(0,1,cubeSize), linspace(0,1,cubeSize));
+% 
+% %% Step 1: Generate 3D Gaussian noise
+% noiseCube = randn(cubeSize, cubeSize, cubeSize);
+% 
+% %% Step 2: Apply Sobel filter in x-direction
+% [gradX, ~, ~] = imgradientxyz(noiseCube, 'sobel');
+% gradX = gradX * 5; % amplify streaks
+% 
+% %% Step 3: Map cube to spherical coordinates
+% % Normalize cube coordinates (0-1)
+% x_norm = x; y_norm = y; z_norm = z;
+% 
+% % Map to spherical coordinates
+% r = R * x_norm;               % radius scales with x
+% theta = 2*pi*y_norm;          % azimuthal angle 0 to 2pi
+% phi = pi*z_norm;              % polar angle 0 to pi
+% 
+% % Convert to Cartesian coordinates (sphere)
+% X = r .* sin(phi) .* cos(theta);
+% Y = r .* sin(phi) .* sin(theta);
+% Z = r .* cos(phi);
+% 
+% %% Step 4: Map noise values to new spherical coordinates
+% % For simplicity, we use the same noise values at each grid point
+% % The color represents noise amplitude
+% colorOriginal = noiseCube(:);
+% colorSobel = gradX(:);
+% 
+% %% Step 5: Visualization
+% figure('Position',[50 50 1800 450]);
+% 
+% % Original cube noise (slice)
+% subplot(1,4,1)
+% sliceIdx = round(cubeSize/2);
+% imagesc(noiseCube(:,:,sliceIdx))
+% axis equal tight; colormap gray;
+% title('Original Noise Cube (slice)')
+% 
+% % Sobel filtered cube (slice)
+% subplot(1,4,2)
+% imagesc(gradX(:,:,sliceIdx))
+% axis equal tight; colormap gray;
+% title('Sobel X-direction (slice)')
+% 
+% % Noise mapped to sphere
+% subplot(1,4,3)
+% scatter3(X(:), Y(:), Z(:), 20, colorOriginal, 'filled')
+% axis equal
+% title('Sphere (Original Noise)')
+% xlabel('X'); ylabel('Y'); zlabel('Z'); colormap jet; colorbar
+% 
+% % Sobel mapped to sphere
+% subplot(1,4,4)
+% scatter3(X(:), Y(:), Z(:), 20, colorSobel, 'filled')
+% axis equal
+% title('Sphere (Sobel Applied)')
+% xlabel('X'); ylabel('Y'); zlabel('Z'); colormap jet; colorbar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%EXAMPLE 2
+%% Parameters
+cubeSize = 50;        % number of points per dimension
+R = 5;                % sphere radius
+
+% Generate cube coordinates
+[x, y, z] = meshgrid(linspace(0,1,cubeSize), linspace(0,1,cubeSize), linspace(0,1,cubeSize));
+
+%% Step 1: Gaussian noise
+noiseCube = randn(cubeSize, cubeSize, cubeSize);
+
+%% Step 2: Sobel in x-direction
+[gradX, ~, ~] = imgradientxyz(noiseCube, 'sobel');
+gradX = gradX * 5; % amplify streaks
+
+%% Step 3: Map cube to spherical coordinates
+x_norm = x; y_norm = y; z_norm = z;
+
+r = R * x_norm;               % radius scales with x
+theta = 2*pi*y_norm;          % azimuth
+phi = pi*z_norm;              % polar
+
+X = r .* sin(phi) .* cos(theta);
+Y = r .* sin(phi) .* sin(theta);
+Z = r .* cos(phi);
+
+%% Step 4: Full 3D scatter (semi-transparent)
+figure('Position',[100 100 1200 500]);
+
+% Original noise mapped to sphere
+subplot(1,2,1)
+scatter3(X(:), Y(:), Z(:), 15, noiseCube(:), 'filled')
+axis equal
+colormap jet; colorbar
+title('Sphere (Original Noise)')
+xlabel('X'); ylabel('Y'); zlabel('Z')
+view(3)
+alpha(0.7)
+
+% Sobel mapped to sphere
+subplot(1,2,2)
+scatter3(X(:), Y(:), Z(:), 15, gradX(:), 'filled')
+axis equal
+colormap jet; colorbar
+title('Sphere (Sobel Applied)')
+xlabel('X'); ylabel('Y'); zlabel('Z')
+view(3)
+alpha(0.7)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%EXAMPLE 3

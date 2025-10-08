@@ -1,5 +1,6 @@
-addpath("/home/user/code/testBonemat/Working_examples")
-addpath("/home/user/code/testBonemat/Working_examples/Progressdisp.m/")
+addpath("/home/user/code/Perlin_phantom_pipeline/")
+addpath("/home/user/code/Perlin_phantom_pipeline/load_files/")
+addpath("/home/user/code/Perlin_phantom_pipeline/Progressdisp.m/")
 
 tet_ind_to_be_plotted = 1;
 

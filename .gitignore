@@ -1,0 +1,9 @@
+# Ignore all zip files
+#.zip
+
+# Ignore all bin files
+#*.bin
+
+# Ignore everything inside the 'large-loads' folder
+load_files/
+
