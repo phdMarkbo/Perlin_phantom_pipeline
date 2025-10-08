@@ -15,12 +15,12 @@ nodes_orig = nodes_orig(:, 2:4) * 0.001;
 nodes_comp = nodes_comp(1:29479, 2:4);
 elems = elems(:, 2:5);
 
-nodes_orig_scaled = nodes_orig * 10000 + 1;
+test = nodes_orig * 10000 + 1;
 tet_ind_to_be_plotted = 1;
 %%
 %%%SCRIPT1
 
-mapping_struct = tetra_to_voxel_mapping(finalVolume, elems, nodes_orig_scaled,tet_ind_to_be_plotted);
+mapping_struct = tetra_to_voxel_mapping(finalVolume, elems, test,tet_ind_to_be_plotted);
 
 %%
 %SCRIPT2
