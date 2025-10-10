@@ -1,4 +1,4 @@
-function all_points = pointsInsideTetrahedraByIndices(nodes,nodes_trans, tets, scale, doPlot, ph_sz, nbr_of_inside_coords)
+function [all_points, all_vals] = pointsAndValsInsideTetrahedraByIndices(nodes,nodes_trans, tets, scale, doPlot, ph)
     % pointsInsideTetrahedraByIndices
     % Inputs:
     %   nodes - Mx3 array of node coordinates
@@ -10,7 +10,8 @@ function all_points = pointsInsideTetrahedraByIndices(nodes,nodes_trans, tets, s
 
     %nbr_of_phantom_voxels = size(ph(:), 1);
 
-    all_points = zeros(nbr_of_inside_coords, 3); %allocating space %%REPLACE WITH SIZE FROM mapped_Struct
+    all_points = zeros(300000000, 3); %allocating space %%REPLACE WITH SIZE FROM mapped_Struct
+    all_vals = zeros(300000000, 1); %allocating space
 
     numTets = size(tets, 1);
     all_points_idx = 1;
@@ -38,7 +39,7 @@ function all_points = pointsInsideTetrahedraByIndices(nodes,nodes_trans, tets, s
         tet_trans = [P1_trans'; P2_trans'; P3_trans'; P4_trans'];
 
         % Compute interior points
-        points = pointsInsideTetrahedronScaled(P1, P2, P3, P4, scale, ph_sz);
+        [points, vals] = pointsInsideTetrahedronScaled(P1, P2, P3, P4, scale, ph);
 
         if isempty(points)
 
@@ -55,7 +56,7 @@ function all_points = pointsInsideTetrahedraByIndices(nodes,nodes_trans, tets, s
         end_idx = all_points_idx + nbr_of_points_in_tetrahedra - 1;
 
         all_points(start_idx:end_idx, :) = points_trans;
-        %all_vals(start_idx:end_idx, :) = vals;
+        all_vals(start_idx:end_idx, :) = vals;
 
         all_points_idx = all_points_idx + nbr_of_points_in_tetrahedra;
 
@@ -71,6 +72,7 @@ function all_points = pointsInsideTetrahedraByIndices(nodes,nodes_trans, tets, s
     end
 
     all_points = all_points(1:end_idx, :); %crop allocated space at the end of nonzero entries
-    %all_vals = all_vals(1:end_idx, :);
+    all_vals = all_vals(1:end_idx, :);
 
 end
+

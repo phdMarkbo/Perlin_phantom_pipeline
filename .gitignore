@@ -6,4 +6,9 @@
 
 # Ignore everything inside the 'large-loads' folder
 load_files/
+older_draft_files/
+
+function_files/test.feb
+function_files/test.log
+function_files/test.xplt
 

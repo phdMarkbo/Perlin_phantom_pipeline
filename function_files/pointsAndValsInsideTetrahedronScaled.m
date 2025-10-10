@@ -1,7 +1,7 @@
-function inside_points = pointsInsideTetrahedronScaled(P1, P2, P3, P4, scale, phantomSize)
+function [inside_points, inside_vals] = pointsAndValsInsideTetrahedronScaled(P1, P2, P3, P4, scale, ph)
 % Vectorized version – MUCH faster than triple for-loop
 % Inputs: 4 vertices (3x1 each), scale factor, phantom volume
-% Outputs: points inside tetrahedron 
+% Outputs: points inside tetrahedron + phantom values
 
     % Scale vertices
     P1s = P1 * scale; P2s = P2 * scale; P3s = P3 * scale; P4s = P4 * scale;
@@ -37,12 +37,13 @@ function inside_points = pointsInsideTetrahedronScaled(P1, P2, P3, P4, scale, ph
     % Phantom values (need integer indices!)
     idx = round(inside_points_scaled);
     validMask = all(idx >= 1, 2) & ...
-                idx(:,1) <= phantomSize(1) & ...
-                idx(:,2) <= phantomSize(2) & ...
-                idx(:,3) <= phantomSize(3);
+                idx(:,1) <= size(ph,1) & ...
+                idx(:,2) <= size(ph,2) & ...
+                idx(:,3) <= size(ph,3);
 
     idx = idx(validMask, :);
 
+    inside_vals = ph(sub2ind(size(ph), idx(:,1), idx(:,2), idx(:,3)));
     inside_points = inside_points_scaled(validMask, :) / scale;
 end
 
